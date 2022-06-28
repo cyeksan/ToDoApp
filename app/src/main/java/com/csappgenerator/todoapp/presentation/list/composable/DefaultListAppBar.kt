@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.csappgenerator.todoapp.R
-import com.csappgenerator.todoapp.domain.model.Priority
-import com.csappgenerator.todoapp.presentation.common.PriorityItem
+import com.csappgenerator.todoapp.util.Priority
+import com.csappgenerator.todoapp.presentation.common.composable.PriorityItem
 import com.csappgenerator.todoapp.ui.theme.LARGE_PADDING
 
 

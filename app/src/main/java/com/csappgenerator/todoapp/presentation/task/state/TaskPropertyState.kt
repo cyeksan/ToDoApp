@@ -2,7 +2,7 @@ package com.csappgenerator.todoapp.presentation.task.state
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.csappgenerator.todoapp.domain.model.Priority
+import com.csappgenerator.todoapp.util.Priority
 
 data class TaskPropertyState(
     val id: Int? = null,

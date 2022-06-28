@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.csappgenerator.todoapp.domain.model.Priority
+import com.csappgenerator.todoapp.util.Priority
 import com.csappgenerator.todoapp.domain.model.ToDoTask
 import com.csappgenerator.todoapp.ui.theme.LARGE_PADDING
 import com.csappgenerator.todoapp.ui.theme.PRIORITY_INDICATOR_SIZE

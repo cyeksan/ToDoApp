@@ -17,8 +17,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.csappgenerator.todoapp.R
-import com.csappgenerator.todoapp.domain.model.Priority
-import com.csappgenerator.todoapp.presentation.common.PriorityItem
+import com.csappgenerator.todoapp.util.Priority
+import com.csappgenerator.todoapp.presentation.common.composable.PriorityItem
 import com.csappgenerator.todoapp.ui.theme.*
 
 @Composable

@@ -1,6 +1,7 @@
 package com.csappgenerator.todoapp.presentation.list
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -96,10 +97,9 @@ fun ListScreen(
                             navController.navigateToSpecificTask(taskId)
                         })
                 }
-                is ListState.Error -> {
-
+                else -> {
+                    EmptyContent()
                 }
-                else -> {}
             }
         },
         topBar = {

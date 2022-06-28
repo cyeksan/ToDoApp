@@ -1,4 +1,4 @@
-package com.csappgenerator.todoapp.presentation.common
+package com.csappgenerator.todoapp.presentation.common.composable
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Row
@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.csappgenerator.todoapp.domain.model.Priority
+import com.csappgenerator.todoapp.util.Priority
 import com.csappgenerator.todoapp.ui.theme.MEDIUM_PADDING
 import com.csappgenerator.todoapp.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.csappgenerator.todoapp.ui.theme.Typography

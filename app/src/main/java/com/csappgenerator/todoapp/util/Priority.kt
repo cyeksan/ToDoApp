@@ -1,4 +1,4 @@
-package com.csappgenerator.todoapp.domain.model
+package com.csappgenerator.todoapp.util
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
