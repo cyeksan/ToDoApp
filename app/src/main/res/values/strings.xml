@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">ToDoApp</string>
+    <string name="add_button">Add Button</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="filter_button">Filter Button</string>
+    <string name="delete_button">Delete Button</string>
+    <string name="delete_all">Delete All</string>
+    <string name="search_placeholder">Search</string>
+    <string name="close_button">Close Button</string>
+    <string name="list_screen_title">Tasks</string>
+    <string name="no_content_icon">No Content Icon</string>
+    <string name="no_content">No tasks found</string>
+    <string name="add_task">Add Task</string>
+    <string name="back_arrow">Back Arrow</string>
+    <string name="add_icon">Add Icon</string>
+    <string name="close_icon">Close Icon</string>
+    <string name="delete_icon">Delete Icon</string>
+    <string name="update_icon">Update Icon</string>
+    <string name="arrow_dropdown">Arrow Dropdown Icon</string>
+    <string name="title_label">Title</string>
+    <string name="description_label">Description</string>
+    <string name="snack_bar_ok_action_label">OK</string>
+    <string name="snack_bar_undo_action_label">UNDO</string>
+    <string name="note_updated">Note updated:</string>
+    <string name="note_deleted">Note deleted:</string>
+    <string name="all_notes_deleted">All notes deleted</string>
+
+
+
+</resources>
