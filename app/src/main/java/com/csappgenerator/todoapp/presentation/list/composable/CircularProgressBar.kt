@@ -9,7 +9,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.csappgenerator.todoapp.ui.theme.CIRCULAR_PROGRESS_BAR_SIZE
 
 @Composable

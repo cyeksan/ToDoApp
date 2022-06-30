@@ -19,7 +19,7 @@ private val DarkColorPalette = darkColors(
     onBackground = DarkAccent,
     onSurface = White,
 
-)
+    )
 
 @SuppressLint("ConflictingOnColor")
 private val LightColorPalette = lightColors(
@@ -33,7 +33,7 @@ private val LightColorPalette = lightColors(
     onBackground = LightAccent,
     onSurface = DarkBackground,
 
-)
+    )
 
 @Composable
 fun ToDoAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {

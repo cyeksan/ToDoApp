@@ -29,11 +29,11 @@ class TaskViewModel @Inject constructor(
     private val useCases: TaskUseCases,
     savedStateHandle: SavedStateHandle,
     snackBarState: MutableState<SnackBarState>,
-    closeSearchBarState: MutableState<SearchBarState>
+    searchBarState: MutableState<SearchBarState>
 
 ) : SharedViewModel(
     snackBarState = snackBarState,
-    prepareSearchBar = closeSearchBarState
+    searchBarState = searchBarState
 ) {
 
     private val _taskState =
@@ -71,7 +71,7 @@ class TaskViewModel @Inject constructor(
                         _eventFlow.emit(UiEvent.SaveTask)
                     } catch (ex: InvalidToDoTaskException) {
                         _eventFlow.emit(
-                            UiEvent.ShowSnackBar(
+                            UiEvent.ShowErrorSnackBar(
                                 ex.localizedMessage ?: DEFAULT_ERROR
                             )
                         )
@@ -88,11 +88,11 @@ class TaskViewModel @Inject constructor(
                             priority = taskPropertyState.value.priority.value
                         )
                         useCases.updateTask(task)
-                        snackBarState.setSnackBarStateToShow(TaskEvent.Update, task)
+                        snackBarState.show(TaskEvent.Update, task)
                         _eventFlow.emit(UiEvent.SaveTask)
                     } catch (ex: InvalidToDoTaskException) {
                         _eventFlow.emit(
-                            UiEvent.ShowSnackBar(
+                            UiEvent.ShowErrorSnackBar(
                                 ex.localizedMessage ?: DEFAULT_ERROR
                             )
                         )
@@ -108,16 +108,14 @@ class TaskViewModel @Inject constructor(
                         description = taskPropertyState.value.description.value,
                         priority = taskPropertyState.value.priority.value
                     )
-
                     useCases.deleteTask(task)
-                    snackBarState.setSnackBarStateToShow(TaskEvent.Delete, task)
+                    snackBarState.show(TaskEvent.Delete, task)
                     _eventFlow.emit(UiEvent.SaveTask)
                 }
             }
 
             else -> {}
         }
-        prepareSearchBar.closeSearchBar()
     }
 
     private fun setTaskState(savedStateHandle: SavedStateHandle) {

@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import com.csappgenerator.todoapp.R
 import com.csappgenerator.todoapp.ui.theme.LOGO_HEIGHT
 import com.csappgenerator.todoapp.ui.theme.SplashBackground
+import com.csappgenerator.todoapp.util.Constants.SPLASH_EXIT_ANIMATION_TWEEN_DURATION
 import com.csappgenerator.todoapp.util.Constants.SPLASH_SCREEN_DELAY
 import com.csappgenerator.todoapp.util.navigateFromSplashToList
 import kotlinx.coroutines.delay
@@ -30,13 +31,13 @@ import kotlinx.coroutines.delay
 fun SplashScreen(navController: NavController) {
     var startAnimation by remember { mutableStateOf(false) }
     val offsetState by animateDpAsState(
-        targetValue = if (startAnimation) 0.dp else 100.dp,
-        animationSpec = tween(1000)
+        targetValue = if (startAnimation) 0.dp else LOGO_HEIGHT,
+        animationSpec = tween(SPLASH_EXIT_ANIMATION_TWEEN_DURATION)
     )
 
     val alphaState by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(1000)
+        animationSpec = tween(SPLASH_EXIT_ANIMATION_TWEEN_DURATION)
     )
     LaunchedEffect(key1 = true) {
         startAnimation = true

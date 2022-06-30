@@ -2,7 +2,6 @@ package com.csappgenerator.todoapp.presentation.list.composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,7 +13,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import com.csappgenerator.todoapp.R
 import com.csappgenerator.todoapp.ui.theme.TOP_APP_BAR_HEIGHT
 
@@ -75,10 +73,4 @@ fun SearchAppBar(
             )
         )
     }
-}
-
-@Composable
-@Preview
-fun SearchAppBarPreview() {
-    SearchAppBar("", {}, {})
 }

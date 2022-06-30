@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(
                             route = Screen.TaskScreen.route
-                                    + "?taskId={taskId}",
+                                    + "?$TASK_ARGUMENT={$TASK_ARGUMENT}",
                             arguments = listOf(
                                 navArgument(
                                     name = TASK_ARGUMENT

@@ -1,4 +1,4 @@
-package com.csappgenerator.todoapp.presentation.task.composable
+package com.csappgenerator.todoapp.presentation.common.composable
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.*
@@ -13,11 +13,11 @@ import com.csappgenerator.todoapp.R
 fun DisplayAlertDialog(
     title: String,
     message: String,
-    openDialog: MutableState<Boolean>,
+    openDeleteItemConfirmDialog: MutableState<Boolean>,
     closeDialog: () -> Unit,
     onYesClicked: () -> Unit
 ) {
-    if (openDialog.value) {
+    if (openDeleteItemConfirmDialog.value) {
         AlertDialog(
             title = {
                 Text(
@@ -40,7 +40,10 @@ fun DisplayAlertDialog(
                         closeDialog()
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant, contentColor = MaterialTheme.colors.secondary)
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.primaryVariant,
+                        contentColor = MaterialTheme.colors.secondary
+                    )
 
                 ) {
                     Text(text = stringResource(R.string.yes))

@@ -5,12 +5,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.csappgenerator.todoapp.R
-import com.csappgenerator.todoapp.util.Priority
 import com.csappgenerator.todoapp.ui.theme.MEDIUM_PADDING
 import com.csappgenerator.todoapp.ui.theme.SMALL_PADDING
 import com.csappgenerator.todoapp.util.Constants.MAX_TASK_TITLE_LENGTH
+import com.csappgenerator.todoapp.util.Priority
 
 @Composable
 fun TaskContent(
@@ -69,17 +68,4 @@ fun TaskContent(
             )
         )
     }
-}
-
-@Composable
-@Preview
-fun TaskContentPreview() {
-    TaskContent(
-        title = "My task",
-        onTitleChange = {},
-        description = "My description",
-        onDescriptionChange = {},
-        priority = Priority.HIGH,
-        onPrioritySelected = {}
-    )
 }

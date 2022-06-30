@@ -9,19 +9,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import com.csappgenerator.todoapp.util.Priority
-import com.csappgenerator.todoapp.ui.theme.SMALL_PADDING
 import com.csappgenerator.todoapp.ui.theme.PRIORITY_INDICATOR_SIZE
+import com.csappgenerator.todoapp.ui.theme.SMALL_PADDING
 import com.csappgenerator.todoapp.ui.theme.Typography
+import com.csappgenerator.todoapp.util.Priority
 
 
 @Composable
 fun PriorityItem(priority: Priority) {
-    val circleColor : Color = priority.color
+    val circleColor: Color = priority.color
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Canvas(modifier = Modifier
-            .size(PRIORITY_INDICATOR_SIZE)
+        Canvas(
+            modifier = Modifier
+                .size(PRIORITY_INDICATOR_SIZE)
         ) {
             drawCircle(color = circleColor)
         }
@@ -33,10 +33,4 @@ fun PriorityItem(priority: Priority) {
             style = Typography.subtitle2,
         )
     }
-}
-
-@Composable
-@Preview
-fun PriorityItemPreview() {
-    PriorityItem(priority = Priority.HIGH)
 }

@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.csappgenerator.todoapp.R
 
 
@@ -52,10 +51,4 @@ fun AddAction(
             contentDescription = stringResource(R.string.add_icon)
         )
     }
-}
-
-@Composable
-@Preview
-fun NewTaskAppBarPreview() {
-    NewTaskAppBar(navigateBackToListScreen = { }, addTask = {})
 }

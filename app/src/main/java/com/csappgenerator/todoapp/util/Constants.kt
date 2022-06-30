@@ -1,9 +1,5 @@
 package com.csappgenerator.todoapp.util
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.ui.unit.IntOffset
-
 object Constants {
     const val DATABASE_TABLE = "todo_table"
     const val DATABASE_NAME = "todo_database"
@@ -14,6 +10,10 @@ object Constants {
     const val PREFERENCE_NAME = "todo_preferences"
     const val PREFERENCE_KEY = "sort_state"
 
+    const val SPLASH_SCREEN = "splash_screen"
+    const val LIST_SCREEN = "list_screen"
+    const val TASK_SCREEN = "task_screen"
+
     const val SPLASH_EXIT_ANIMATION_TWEEN_DURATION = 600
     const val TASK_ENTER_ANIMATION_TWEEN_DURATION = 600
     const val LIST_SHRINK_TWEEN_DURATION = 200
@@ -21,6 +21,7 @@ object Constants {
     const val SPLASH_SCREEN_DELAY = 2500L
     const val SWIPE_DISMISS_THRESHOLD = 0.3f
     const val DELETE_ICON_MAX_ROTATION = -45f
+    const val DROPDOWN_ICON_MAX_ROTATION = 180f
     const val MAX_TASK_TITLE_LENGTH = 30
     const val TASK_ID_DEFAULT = -1
 }

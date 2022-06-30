@@ -6,7 +6,7 @@ import com.csappgenerator.todoapp.util.Priority
 
 data class TaskPropertyState(
     val id: Int? = null,
-    val title: MutableState<String> = mutableStateOf("") ,
+    val title: MutableState<String> = mutableStateOf(""),
     val description: MutableState<String> = mutableStateOf(""),
     val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
 )

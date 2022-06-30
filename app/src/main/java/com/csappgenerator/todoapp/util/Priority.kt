@@ -4,13 +4,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
-import com.csappgenerator.todoapp.presentation.common.composable.PriorityItem
 import com.csappgenerator.todoapp.ui.theme.HighPriorityColor
 import com.csappgenerator.todoapp.ui.theme.LowPriorityColor
 import com.csappgenerator.todoapp.ui.theme.MediumPriorityColor
 
-enum class Priority// custom constructors
-    (var orderType: OrderType) {
+enum class Priority(var orderType: OrderType) {
     LOW(OrderType.Ascending),
     MEDIUM(OrderType.None),
     HIGH(OrderType.Descending),

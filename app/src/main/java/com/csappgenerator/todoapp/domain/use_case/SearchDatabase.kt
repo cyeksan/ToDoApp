@@ -5,7 +5,7 @@ import com.csappgenerator.todoapp.domain.repository.ToDoRepository
 import kotlinx.coroutines.flow.Flow
 
 class SearchDatabase(private val toDoRepository: ToDoRepository) {
-    operator fun invoke(searchQuery: String) : Flow<List<ToDoTask>> {
+    operator fun invoke(searchQuery: String): Flow<List<ToDoTask>> {
         return toDoRepository.searchDatabase(searchQuery)
     }
 }

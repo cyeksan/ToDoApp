@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.csappgenerator.todoapp.R
-import com.csappgenerator.todoapp.util.Priority
+import com.csappgenerator.todoapp.presentation.common.composable.DisplayAlertDialog
 import com.csappgenerator.todoapp.presentation.common.composable.PriorityItem
-import com.csappgenerator.todoapp.presentation.task.composable.DisplayAlertDialog
 import com.csappgenerator.todoapp.ui.theme.MEDIUM_PADDING
+import com.csappgenerator.todoapp.util.Priority
 
 
 @Composable
@@ -22,7 +22,7 @@ fun DefaultListAppBar(
     onSortClicked: (Priority) -> Unit,
     onDeleteAllClicked: () -> Unit,
     onDeleteAllConfirmed: () -> Unit,
-    openDialog: MutableState<Boolean>
+    openDeleteAllConfirmDialog: MutableState<Boolean>
 ) {
     TopAppBar(
         title = {
@@ -35,7 +35,7 @@ fun DefaultListAppBar(
                 onSortClicked = onSortClicked,
                 onDeleteAllConfirmed = onDeleteAllConfirmed,
                 onDeleteAllClicked = onDeleteAllClicked,
-                openDialog = openDialog
+                openDeleteAllConfirmDialog = openDeleteAllConfirmDialog
             )
         }
     )
@@ -47,14 +47,15 @@ fun ListAppBarActions(
     onSortClicked: (Priority) -> Unit,
     onDeleteAllClicked: () -> Unit,
     onDeleteAllConfirmed: () -> Unit,
-    openDialog: MutableState<Boolean>
+    openDeleteAllConfirmDialog: MutableState<Boolean>
 ) {
-
     SearchAction(onSearchClicked = onSearchClicked)
     SortAction(onSortClicked = onSortClicked)
-    DeleteAllAction(onDeleteAllClicked = onDeleteAllClicked,
+    DeleteAllAction(
+        onDeleteAllClicked = onDeleteAllClicked,
         onDeleteAllConfirmed = onDeleteAllConfirmed,
-        openDialog = openDialog)
+        openDeleteAllConfirmDialog = openDeleteAllConfirmDialog
+    )
 }
 
 @Composable
@@ -108,15 +109,15 @@ fun SortAction(
 fun DeleteAllAction(
     onDeleteAllClicked: () -> Unit,
     onDeleteAllConfirmed: () -> Unit,
-    openDialog: MutableState<Boolean>,
+    openDeleteAllConfirmDialog: MutableState<Boolean>,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     DisplayAlertDialog(
         title = stringResource(id = R.string.delete_all_confirm_title),
         message = stringResource(id = R.string.delete_all_confirm_message),
-        openDialog = openDialog,
-        closeDialog = { openDialog.value = false },
+        openDeleteItemConfirmDialog = openDeleteAllConfirmDialog,
+        closeDialog = { openDeleteAllConfirmDialog.value = false },
         onYesClicked = onDeleteAllConfirmed
     )
     IconButton(onClick = {

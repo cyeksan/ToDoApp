@@ -11,7 +11,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -26,25 +25,24 @@ class DataStoreRepository @Inject constructor(
     private object PreferenceKey {
         val sortKey = stringPreferencesKey(PREFERENCE_KEY)
     }
+
     private val dataStore = context.dataStore
 
-    suspend fun persistSortState(priority: Priority): Unit = withContext(ioDispatcher){
+    suspend fun persistSortState(priority: Priority): Unit = withContext(ioDispatcher) {
         dataStore.edit { preference ->
             preference[PreferenceKey.sortKey] = priority.name
         }
     }
 
-
     val readSortState = dataStore.data
-            .catch { exception ->
-                if(exception is IOException) {
-                    emit(emptyPreferences())
-                    return@catch
-                }
-                throw exception
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+                return@catch
             }
-            .map { preferences ->
-                preferences[PreferenceKey.sortKey] ?: Priority.NONE.name
-            }
-
+            throw exception
+        }
+        .map { preferences ->
+            preferences[PreferenceKey.sortKey] ?: Priority.NONE.name
+        }
 }

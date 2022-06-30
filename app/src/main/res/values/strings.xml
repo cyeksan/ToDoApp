@@ -21,9 +21,10 @@
     <string name="description_label">Description</string>
     <string name="snack_bar_ok_action_label">OK</string>
     <string name="snack_bar_undo_action_label">UNDO</string>
-    <string name="task_updated">Note updated:</string>
-    <string name="task_deleted">Note deleted:</string>
-    <string name="all_tasks_deleted">All notes deleted</string>
+    <string name="task_updated">Task updated:</string>
+    <string name="task_deleted">Task deleted:</string>
+    <string name="task_restored">Task restored: </string>
+    <string name="all_tasks_deleted">All tasks deleted</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="delete_confirm_message">Are you sure you want to remove \'%1$s\'?</string>
@@ -32,6 +33,4 @@
     <string name="delete_all_confirm_title">Remove all tasks?</string>
     <string name="no_tasks_found">No tasks found to delete</string>
     <string name="todo_logo">ToDo App Logo</string>
-
-
 </resources>

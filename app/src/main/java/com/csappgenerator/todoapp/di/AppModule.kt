@@ -1,7 +1,8 @@
 package com.csappgenerator.todoapp.di
 
 import android.content.Context
-import androidx.compose.runtime.*
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.room.Room
 import com.csappgenerator.todoapp.data.local.ToDoDatabase
 import com.csappgenerator.todoapp.data.repository.DataStoreRepository
@@ -41,15 +42,17 @@ object AppModule {
     fun provideToDoRepository(db: ToDoDatabase): ToDoRepository {
         return ToDoRepositoryImpl(db.toDoDao)
     }
+
     @Singleton
     @Provides
-    fun provideReadStoreState() : Flow<String> {
-        return flow {  }
+    fun provideReadStoreState(): Flow<String> {
+        return flow { }
     }
 
     @Singleton
     @Provides
-    fun provideDataStoreRepository(@ApplicationContext context: Context
+    fun provideDataStoreRepository(
+        @ApplicationContext context: Context
     ): DataStoreRepository {
         return DataStoreRepository(context)
     }
@@ -80,13 +83,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideUpdateState() : MutableState<SnackBarState> {
-       return mutableStateOf(SnackBarState.Idle)
+    fun provideSnackBarState(): MutableState<SnackBarState> {
+        return mutableStateOf(SnackBarState.Idle)
     }
 
     @Singleton
     @Provides
-    fun provideCloseSearchBarState() : MutableState<SearchBarState> {
-        return mutableStateOf(SearchBarState.SearchBarOpened)
+    fun provideSearchBarState(): MutableState<SearchBarState> {
+        return mutableStateOf(SearchBarState.SearchBarClosed)
     }
 }

@@ -35,7 +35,7 @@ fun TaskScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is UiEvent.ShowSnackBar -> {
+                is UiEvent.ShowErrorSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = context.getString(R.string.snack_bar_ok_action_label),

@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.csappgenerator.todoapp.R
+import com.csappgenerator.todoapp.presentation.common.composable.DisplayAlertDialog
 
 @Composable
 fun ExistingTaskAppBar(
@@ -31,7 +32,7 @@ fun ExistingTaskAppBar(
         backgroundColor = MaterialTheme.colors.primary,
         actions = {
             DeleteAction(
-                onDeleteConfirmed = onDeleteConfirmed, openDialog = openDialog,
+                onDeleteConfirmed = onDeleteConfirmed, openDeleteItemConfirmDialog = openDialog,
                 selectedTaskTitle = selectedTaskTitle
             )
             UpdateAction(
@@ -57,19 +58,19 @@ fun CloseAction(
 @Composable
 fun DeleteAction(
     onDeleteConfirmed: () -> Unit,
-    openDialog: MutableState<Boolean>,
+    openDeleteItemConfirmDialog: MutableState<Boolean>,
     selectedTaskTitle: String
 ) {
     DisplayAlertDialog(
         title = stringResource(id = R.string.delete_confirm_title, selectedTaskTitle),
         message = stringResource(id = R.string.delete_confirm_message, selectedTaskTitle),
-        openDialog = openDialog,
-        closeDialog = { openDialog.value = false },
+        openDeleteItemConfirmDialog = openDeleteItemConfirmDialog,
+        closeDialog = { openDeleteItemConfirmDialog.value = false },
         onYesClicked = onDeleteConfirmed
     )
 
     IconButton(onClick = {
-        openDialog.value = true
+        openDeleteItemConfirmDialog.value = true
     }) {
         Icon(
             imageVector = Icons.Filled.Delete,

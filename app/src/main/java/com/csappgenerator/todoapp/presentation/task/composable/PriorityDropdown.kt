@@ -17,12 +17,12 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import com.csappgenerator.todoapp.R
-import com.csappgenerator.todoapp.util.Priority
 import com.csappgenerator.todoapp.presentation.common.composable.PriorityItem
 import com.csappgenerator.todoapp.ui.theme.*
+import com.csappgenerator.todoapp.util.Constants.DROPDOWN_ICON_MAX_ROTATION
+import com.csappgenerator.todoapp.util.Priority
 
 @Composable
 fun PriorityDropdown(
@@ -32,12 +32,10 @@ fun PriorityDropdown(
     var expanded by remember {
         mutableStateOf(false)
     }
-
     val dropdownIconRotateAngle: Float by animateFloatAsState(
-        targetValue = if (expanded) 180f else 0f
+        targetValue = if (expanded) DROPDOWN_ICON_MAX_ROTATION else 0f
     )
-
-    var parentSize by remember { mutableStateOf(IntSize.Zero)}
+    var parentSize by remember { mutableStateOf(IntSize.Zero) }
 
     val circleColor = priority.color
 
@@ -85,7 +83,7 @@ fun PriorityDropdown(
 
         DropdownMenu(
             modifier = Modifier
-                .width(with(LocalDensity.current) {parentSize.width.toDp()})
+                .width(with(LocalDensity.current) { parentSize.width.toDp() })
                 .background(
                     color = MaterialTheme.colors.primaryVariant
                 ),
@@ -104,13 +102,4 @@ fun PriorityDropdown(
 
         }
     }
-}
-
-@Composable
-@Preview
-fun PriorityDropdownPreview() {
-    PriorityDropdown(
-        priority = Priority.HIGH,
-        onPrioritySelected = {}
-    )
 }

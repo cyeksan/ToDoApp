@@ -10,26 +10,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import com.csappgenerator.todoapp.R
 import com.csappgenerator.todoapp.domain.model.ToDoTask
-import com.csappgenerator.todoapp.presentation.list.event.ListEvent
 import com.csappgenerator.todoapp.ui.theme.MEDIUM_PADDING
 import com.csappgenerator.todoapp.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.csappgenerator.todoapp.ui.theme.TASK_ITEM_ELEVATION
 import com.csappgenerator.todoapp.util.Constants
 import com.csappgenerator.todoapp.util.Constants.DELETE_ICON_MAX_ROTATION
 import com.csappgenerator.todoapp.util.Constants.LIST_SHRINK_TWEEN_DURATION
-import com.csappgenerator.todoapp.util.Priority
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.csappgenerator.todoapp.util.clickableSingle
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -47,7 +43,7 @@ fun ListContent(
                 }) { task ->
                 val dismissState = rememberDismissState(
                     confirmStateChange = {
-                        if(it == DismissValue.DismissedToStart) {
+                        if (it == DismissValue.DismissedToStart) {
                             onSwipeToDelete(task)
                         }
                         true
@@ -61,7 +57,7 @@ fun ListContent(
                 )
 
                 AnimatedVisibility(
-                    visible =  !isDismissed,
+                    visible = !isDismissed,
                     enter = expandVertically(
                         animationSpec = tween(LIST_SHRINK_TWEEN_DURATION)
                     ),
@@ -93,7 +89,6 @@ fun ListContent(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TaskItem(
     toDoTask: ToDoTask,
@@ -101,15 +96,16 @@ fun TaskItem(
 ) {
     val circleColor: Color = toDoTask.priority.color
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickableSingle {
+                navigateToTaskScreen(toDoTask.id)
+            },
         color = MaterialTheme.colors.primary,
         shape = RectangleShape,
         elevation = TASK_ITEM_ELEVATION,
-        onClick = {
-            navigateToTaskScreen(toDoTask.id)
-        }
 
-    ) {
+        ) {
         Column(
             modifier = Modifier
                 .padding(all = MEDIUM_PADDING)
@@ -144,23 +140,6 @@ fun TaskItem(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
-
-
         }
     }
-    /* Spacer(
-         modifier = Modifier
-             .fillMaxWidth()
-             .padding(horizontal = LARGE_PADDING)
-             .height(SPACER_HEIGHT)
-             .background(color = MaterialTheme.colors.surface)
-     )*/
-}
-
-@Composable
-@Preview
-fun TaskItemPreview() {
-    TaskItem(
-        toDoTask = ToDoTask(0, "Title", "Some random text", Priority.HIGH),
-        navigateToTaskScreen = {})
 }
