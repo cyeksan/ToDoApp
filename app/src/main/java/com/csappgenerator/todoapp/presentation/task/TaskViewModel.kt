@@ -32,7 +32,7 @@ class TaskViewModel @Inject constructor(
     closeSearchBarState: MutableState<SearchBarState>
 
 ) : SharedViewModel(
-    prepareSnackBar = snackBarState,
+    snackBarState = snackBarState,
     prepareSearchBar = closeSearchBarState
 ) {
 
@@ -49,7 +49,6 @@ class TaskViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        prepareSnackBar.setSnackBarStateToIdle()
         setTaskState(savedStateHandle)
     }
 
@@ -89,7 +88,7 @@ class TaskViewModel @Inject constructor(
                             priority = taskPropertyState.value.priority.value
                         )
                         useCases.updateTask(task)
-                        prepareSnackBar.setSnackBarStateToShow(TaskEvent.Update, task)
+                        snackBarState.setSnackBarStateToShow(TaskEvent.Update, task)
                         _eventFlow.emit(UiEvent.SaveTask)
                     } catch (ex: InvalidToDoTaskException) {
                         _eventFlow.emit(
@@ -111,7 +110,7 @@ class TaskViewModel @Inject constructor(
                     )
 
                     useCases.deleteTask(task)
-                    prepareSnackBar.setSnackBarStateToShow(TaskEvent.Delete, task)
+                    snackBarState.setSnackBarStateToShow(TaskEvent.Delete, task)
                     _eventFlow.emit(UiEvent.SaveTask)
                 }
             }

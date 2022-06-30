@@ -10,11 +10,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class SharedViewModel @Inject constructor(
-    val prepareSnackBar: MutableState<SnackBarState>,
+    val snackBarState: MutableState<SnackBarState>,
     val prepareSearchBar: MutableState<SearchBarState>
 ): ViewModel() {
-
-    fun MutableState<SnackBarState>.setSnackBarStateToIdle() {
+    init {
+        snackBarState.setSnackBarStateToIdle()
+    }
+    private fun MutableState<SnackBarState>.setSnackBarStateToIdle() {
         this.value = SnackBarState.Idle
     }
 

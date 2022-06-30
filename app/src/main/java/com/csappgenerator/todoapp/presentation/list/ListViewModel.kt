@@ -1,6 +1,5 @@
 package com.csappgenerator.todoapp.presentation.list
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +17,6 @@ import com.csappgenerator.todoapp.presentation.task.event.TaskEvent
 import com.csappgenerator.todoapp.util.OrderType
 import com.csappgenerator.todoapp.util.Priority
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,7 +28,7 @@ class ListViewModel @Inject constructor(
     searchBarState: MutableState<SearchBarState>,
     private val dataStoreRepository: DataStoreRepository
 ) : SharedViewModel(
-    prepareSnackBar = snackBarState,
+    snackBarState = snackBarState,
     prepareSearchBar = searchBarState
 ) {
 
@@ -74,7 +72,6 @@ class ListViewModel @Inject constructor(
                     allTasks.value = toDoTaskList
                     _requestState.value = RequestState.Success(toDoTaskList)
                 }
-
             }
         } catch (ex: Exception) {
             _requestState.value = RequestState.Error(ex)
@@ -133,28 +130,17 @@ class ListViewModel @Inject constructor(
                 }
             }
             is ListEvent.RestoreTask -> {
-                try {
-                    viewModelScope.launch {
-                        useCases.addTask(event.task)
-                        prepareSnackBar.setSnackBarStateToShow(TaskEvent.NoteRestored, event.task)
-                    }
-                } catch (ex: Exception){
-                    _requestState.value = RequestState.Error(ex)
-
+                viewModelScope.launch {
+                    useCases.addTask(event.task)
+                    snackBarState.setSnackBarStateToShow(TaskEvent.NoteRestored, event.task)
                 }
-
-
             }
 
             is ListEvent.DeleteAll -> {
-                try {
-                    viewModelScope.launch {
-                        useCases.deleteAllTasks()
-                        prepareSnackBar.setSnackBarStateToShow(TaskEvent.DeleteAll, null)
-                    }
 
-                } catch (ex: Exception) {
-                    _requestState.value = RequestState.Error(ex)
+                viewModelScope.launch {
+                    useCases.deleteAllTasks()
+                    snackBarState.setSnackBarStateToShow(TaskEvent.DeleteAll, null)
                 }
             }
             is ListEvent.PersistSortingStateAndReload -> {
@@ -167,7 +153,7 @@ class ListViewModel @Inject constructor(
             is ListEvent.Delete -> {
                 viewModelScope.launch {
                     useCases.deleteTask(event.task)
-                    prepareSnackBar.setSnackBarStateToShow(TaskEvent.Delete, event.task)
+                    snackBarState.setSnackBarStateToShow(TaskEvent.Delete, event.task)
                 }
             }
         }

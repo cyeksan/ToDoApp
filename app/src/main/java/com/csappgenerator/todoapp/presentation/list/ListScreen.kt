@@ -29,7 +29,7 @@ fun ListScreen(
     val requestState = viewModel.requestState.value
     val searchState by viewModel.searchBarState
     val searchBarTextState by viewModel.searchBarState.value.searchBarText
-    val prepareSnackBarState = viewModel.prepareSnackBar.value
+    val prepareSnackBarState = viewModel.snackBarState.value
     val taskEventState by viewModel.taskEventState
 
     val taskList = viewModel.allTasks.value
@@ -58,7 +58,6 @@ fun ListScreen(
                             is TaskEvent.Delete -> context.getString(R.string.task_deleted) + " ${(prepareSnackBarState as SnackBarState.Show).task!!.title}"
                             is TaskEvent.DeleteAll -> context.getString(R.string.all_tasks_deleted)
                             is TaskEvent.NoteRestored -> "restored"
-
                             else -> ""
                         },
                         actionLabel =
@@ -85,6 +84,7 @@ fun ListScreen(
 
     Scaffold(
         content = {
+
             when (requestState) {
                 is RequestState.Loading -> {
                     CircularProgressBar()
@@ -101,7 +101,7 @@ fun ListScreen(
                                 navController.navigateToSpecificTask(taskId)
                             }
                         )
-                        Log.d("cansu", "list rendered")
+                    Log.d("cansu", "triggered")
 
                 }
                 else -> {
