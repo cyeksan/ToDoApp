@@ -1,5 +1,6 @@
 package com.csappgenerator.todoapp.presentation.list
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +59,6 @@ class ListViewModel @Inject constructor(
             }.collect { priority ->
                 _sortState.value = priority.toOrderType()
                 getAllTasks(sortState.value, _allTasks)
-
             }
 
         }
@@ -78,7 +78,6 @@ class ListViewModel @Inject constructor(
         } catch (ex: Exception) {
             _requestState.value = RequestState.Error(ex)
         }
-
     }
 
     fun onSearchBarEvent(event: SearchBarEvent) {
@@ -150,7 +149,6 @@ class ListViewModel @Inject constructor(
                 viewModelScope.launch {
                     dataStoreRepository.persistSortState(event.priority)
                     _sortState.value = event.priority.toOrderType()
-                    getAllTasks(sortState.value, _allTasks)
                 }
             }
             is ListEvent.Delete -> {
