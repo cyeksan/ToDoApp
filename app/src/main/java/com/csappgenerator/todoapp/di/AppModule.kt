@@ -63,9 +63,7 @@ object AppModule {
             deleteAllTasks = DeleteAllTasks(toDoRepository),
             getAllTasks = GetAllTasks(toDoRepository),
             getSelectedTask = GetSelectedTask(toDoRepository),
-            searchDatabase = SearchDatabase(toDoRepository),
-            sortByAscendingPriority = SortByAscendingPriority(toDoRepository),
-            sortByDescendingPriority = SortByDescendingPriority(toDoRepository),
+            searchDatabase = SearchDatabase(toDoRepository)
         )
     }
 

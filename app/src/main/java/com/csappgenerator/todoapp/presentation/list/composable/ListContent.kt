@@ -18,23 +18,26 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import com.csappgenerator.todoapp.R
 import com.csappgenerator.todoapp.domain.model.ToDoTask
+import com.csappgenerator.todoapp.presentation.list.event.ListEvent
 import com.csappgenerator.todoapp.ui.theme.MEDIUM_PADDING
 import com.csappgenerator.todoapp.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.csappgenerator.todoapp.ui.theme.TASK_ITEM_ELEVATION
 import com.csappgenerator.todoapp.util.Constants
 import com.csappgenerator.todoapp.util.Constants.DELETE_ICON_MAX_ROTATION
-import com.csappgenerator.todoapp.util.Constants.LIST_SHRINK_TWEEN_DELAY
 import com.csappgenerator.todoapp.util.Constants.LIST_SHRINK_TWEEN_DURATION
 import com.csappgenerator.todoapp.util.Priority
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListContent(
     taskList: List<ToDoTask>,
     onSwipeToDelete: (ToDoTask) -> Unit,
-    navigateToTaskScreen: (Int) -> Unit) {
+    navigateToTaskScreen: (Int) -> Unit,
+) {
     if (taskList.isNotEmpty()) {
         LazyColumn {
             items(
@@ -42,31 +45,23 @@ fun ListContent(
                 key = { task ->
                     task.id
                 }) { task ->
-                val dismissState = rememberDismissState()
-                val dismissDirection = dismissState.dismissDirection
-
-                val isDismissed =
-                    dismissState.isDismissed(DismissDirection.EndToStart)
-
-                if (isDismissed && dismissDirection == DismissDirection.EndToStart) {
-                    LaunchedEffect(key1 = true) {
-                        delay(LIST_SHRINK_TWEEN_DELAY) // Since the list animation lasts for 300 ms, we add the delay to see the animation.
-                        onSwipeToDelete(task)
+                val dismissState = rememberDismissState(
+                    confirmStateChange = {
+                        if(it == DismissValue.DismissedToStart) {
+                            onSwipeToDelete(task)
+                        }
+                        true
                     }
-                }
+                )
+                val isDismissed = dismissState.isDismissed(DismissDirection.EndToStart)
+
                 val degrees by animateFloatAsState(
                     targetValue =
                     if (dismissState.targetValue == DismissValue.Default) 0f else DELETE_ICON_MAX_ROTATION
                 )
 
-                var itemAppeared by remember {mutableStateOf(false)}
-
-                LaunchedEffect(key1 = true) {
-                    itemAppeared = true
-                }
-
                 AnimatedVisibility(
-                    visible = itemAppeared && !isDismissed,
+                    visible =  !isDismissed,
                     enter = expandVertically(
                         animationSpec = tween(LIST_SHRINK_TWEEN_DURATION)
                     ),

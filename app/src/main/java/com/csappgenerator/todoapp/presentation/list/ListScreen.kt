@@ -1,6 +1,7 @@
 package com.csappgenerator.todoapp.presentation.list
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +32,7 @@ fun ListScreen(
     val prepareSnackBarState = viewModel.prepareSnackBar.value
     val taskEventState by viewModel.taskEventState
 
-    val taskList by viewModel.allTasks
+    val taskList = viewModel.allTasks.value
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -53,9 +54,11 @@ fun ListScreen(
                     val result = scaffoldState.snackbarHostState.showSnackbar(
                         message =
                         when (taskEventState) {
-                            is TaskEvent.Update -> context.getString(R.string.task_updated) + " ${prepareSnackBarState.task!!.title}"
-                            is TaskEvent.Delete -> context.getString(R.string.task_deleted) + " ${prepareSnackBarState.task!!.title}"
+                            is TaskEvent.Update -> context.getString(R.string.task_updated) + " ${(prepareSnackBarState as SnackBarState.Show).task!!.title}"
+                            is TaskEvent.Delete -> context.getString(R.string.task_deleted) + " ${(prepareSnackBarState as SnackBarState.Show).task!!.title}"
                             is TaskEvent.DeleteAll -> context.getString(R.string.all_tasks_deleted)
+                            is TaskEvent.NoteRestored -> "restored"
+
                             else -> ""
                         },
                         actionLabel =
@@ -63,12 +66,17 @@ fun ListScreen(
                             is TaskEvent.Update -> context.getString(R.string.snack_bar_ok_action_label)
                             is TaskEvent.Delete -> context.getString(R.string.snack_bar_undo_action_label)
                             is TaskEvent.DeleteAll -> context.getString(R.string.snack_bar_ok_action_label)
+                            is TaskEvent.NoteRestored -> context.getString(R.string.snack_bar_ok_action_label)
+
                             else -> ""
                         },
                     )
-                    if (result == SnackbarResult.ActionPerformed)
-                        prepareSnackBarState.task?.let { ListEvent.RestoreTask(it) }
-                            ?.let { viewModel.onEvent(it) }
+                    if (result == SnackbarResult.ActionPerformed && prepareSnackBarState.eventType == TaskEvent.Delete
+                    ) {
+                        viewModel.onEvent(ListEvent.RestoreTask(prepareSnackBarState.task!!))
+                        Log.d("cansu", "restored")
+
+                    }
                 }
             }
             is SnackBarState.Idle -> {}
@@ -83,14 +91,18 @@ fun ListScreen(
                 }
 
                 is RequestState.Success -> {
-                    ListContent(
-                        taskList = requestState.data,
-                        onSwipeToDelete = { task ->
-                            viewModel.onEvent(ListEvent.Delete(task))
-                        },
-                        navigateToTaskScreen = { taskId ->
-                            navController.navigateToSpecificTask(taskId)
-                        })
+                        ListContent(
+                            taskList = requestState.data,
+                            onSwipeToDelete = { task ->
+                                viewModel.onEvent(ListEvent.Delete(task))
+                                scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                            },
+                            navigateToTaskScreen = { taskId ->
+                                navController.navigateToSpecificTask(taskId)
+                            }
+                        )
+                        Log.d("cansu", "list rendered")
+
                 }
                 else -> {
                     EmptyContent()

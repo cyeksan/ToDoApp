@@ -8,5 +8,7 @@ sealed class TaskEvent {
     object Update : TaskEvent()
     object Delete : TaskEvent()
     object DeleteAll : TaskEvent()
+    object NoteRestored : TaskEvent()
+
     data class NoAction(val navController: NavController) : TaskEvent()
 }

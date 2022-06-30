@@ -18,6 +18,7 @@ import com.csappgenerator.todoapp.presentation.task.event.TaskEvent
 import com.csappgenerator.todoapp.util.OrderType
 import com.csappgenerator.todoapp.util.Priority
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -125,13 +126,24 @@ class ListViewModel @Inject constructor(
                     is TaskEvent.DeleteAll -> {
                         _taskEventState.value = TaskEvent.DeleteAll
                     }
+                    is TaskEvent.NoteRestored -> {
+                        _taskEventState.value = TaskEvent.NoteRestored
+                    }
                     else -> {}
                 }
             }
             is ListEvent.RestoreTask -> {
-                viewModelScope.launch {
-                    useCases.addTask(event.task)
+                try {
+                    viewModelScope.launch {
+                        useCases.addTask(event.task)
+                        prepareSnackBar.setSnackBarStateToShow(TaskEvent.NoteRestored, event.task)
+                    }
+                } catch (ex: Exception){
+                    _requestState.value = RequestState.Error(ex)
+
                 }
+
+
             }
 
             is ListEvent.DeleteAll -> {
@@ -149,6 +161,7 @@ class ListViewModel @Inject constructor(
                 viewModelScope.launch {
                     dataStoreRepository.persistSortState(event.priority)
                     _sortState.value = event.priority.toOrderType()
+
                 }
             }
             is ListEvent.Delete -> {

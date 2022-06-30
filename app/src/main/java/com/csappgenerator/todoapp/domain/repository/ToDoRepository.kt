@@ -12,6 +12,4 @@ interface ToDoRepository {
     suspend fun deleteTask(toDoTask: ToDoTask)
     suspend fun deleteAllTasks()
     fun searchDatabase(searchQuery: String) : Flow<List<ToDoTask>>
-    fun sortByAscendingPriority(): Flow<List<ToDoTask>>
-    fun sortByDescendingPriority(): Flow<List<ToDoTask>>
 }

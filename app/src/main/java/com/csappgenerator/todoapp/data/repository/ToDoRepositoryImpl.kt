@@ -40,12 +40,4 @@ class ToDoRepositoryImpl(
     override fun searchDatabase(searchQuery: String): Flow<List<ToDoTask>> {
         return toDoDao.searchDatabase(searchQuery)
     }
-
-    override fun sortByAscendingPriority(): Flow<List<ToDoTask>> {
-        return toDoDao.sortByAscendingPriority()
-    }
-
-    override fun sortByDescendingPriority(): Flow<List<ToDoTask>> {
-        return toDoDao.sortByDescendingPriority()
-    }
 }

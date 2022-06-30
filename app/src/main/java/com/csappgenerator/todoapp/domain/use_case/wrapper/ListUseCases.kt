@@ -9,6 +9,4 @@ data class ListUseCases(
     val getAllTasks: GetAllTasks,
     val getSelectedTask: GetSelectedTask,
     val searchDatabase: SearchDatabase,
-    val sortByAscendingPriority: SortByAscendingPriority,
-    val sortByDescendingPriority: SortByDescendingPriority,
 )

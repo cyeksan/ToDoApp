@@ -28,6 +28,3 @@ fun NavController.navigateFromSplashToList() {
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PREFERENCE_NAME)
 
-fun String.convertKeyToPriority(): Priority? {
-    return Priority.values().find { it.name == this}
-}
