@@ -37,7 +37,7 @@ fun NavController.navigateFromSplashToList() {
     )
 }
 
-fun TaskEvent.getSnackBarMessage(context: Context, snackBarState: SnackBarState.Show) : String {
+fun TaskEvent.getSnackBarMessage(context: Context, snackBarState: SnackBarState.Show): String {
     return when (this) {
         is TaskEvent.Update -> context.getString(R.string.task_updated) + " ${snackBarState.task!!.title}"
         is TaskEvent.Delete -> context.getString(R.string.task_deleted) + " ${snackBarState.task!!.title}"

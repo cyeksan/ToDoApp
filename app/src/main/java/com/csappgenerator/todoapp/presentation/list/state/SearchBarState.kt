@@ -6,5 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 sealed class SearchBarState {
     object SearchBarOpened : SearchBarState()
     object SearchBarClosed : SearchBarState()
+
     val searchBarText: MutableState<String> = mutableStateOf("")
 }

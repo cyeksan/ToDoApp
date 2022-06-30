@@ -24,7 +24,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ListScreen(
     navController: NavController,
-    viewModel: ListViewModel = hiltViewModel()) {
+    viewModel: ListViewModel = hiltViewModel()
+) {
 
     val requestState = viewModel.requestState.value
     val searchState by viewModel.searchBarState
@@ -60,7 +61,8 @@ fun ListScreen(
                         actionLabel = taskEventState!!.getSnackBarAction(context),
                     )
                     if (result == SnackbarResult.ActionPerformed &&
-                        snackBarState.eventType == TaskEvent.Delete) {
+                        snackBarState.eventType == TaskEvent.Delete
+                    ) {
 
                         viewModel.onEvent(ListEvent.RestoreTask(snackBarState.task!!))
                     }
