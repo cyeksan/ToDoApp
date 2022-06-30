@@ -45,7 +45,7 @@ fun PriorityDropdown(
             color = MaterialTheme.colors.onSurface.copy(ContentAlpha.disabled),
             shape = MaterialTheme.shapes.small
         )
-        .padding(start = MEDIUM_PADDING),
+        .padding(start = SMALL_PADDING),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Canvas(

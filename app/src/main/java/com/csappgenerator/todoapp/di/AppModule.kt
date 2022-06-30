@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.*
 import androidx.room.Room
 import com.csappgenerator.todoapp.data.local.ToDoDatabase
+import com.csappgenerator.todoapp.data.repository.DataStoreRepository
 import com.csappgenerator.todoapp.data.repository.ToDoRepositoryImpl
 import com.csappgenerator.todoapp.domain.repository.ToDoRepository
 import com.csappgenerator.todoapp.domain.use_case.*
@@ -16,6 +17,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Singleton
 
 @Module
@@ -38,12 +41,25 @@ object AppModule {
     fun provideToDoRepository(db: ToDoDatabase): ToDoRepository {
         return ToDoRepositoryImpl(db.toDoDao)
     }
+    @Singleton
+    @Provides
+    fun provideReadStoreState() : Flow<String> {
+        return flow {  }
+    }
+
+    @Singleton
+    @Provides
+    fun provideDataStoreRepository(@ApplicationContext context: Context
+    ): DataStoreRepository {
+        return DataStoreRepository(context)
+    }
 
     @Singleton
     @Provides
     fun provideListUseCases(toDoRepository: ToDoRepository): ListUseCases {
         return ListUseCases(
             addTask = AddTask(toDoRepository),
+            deleteTask = DeleteTask(toDoRepository),
             deleteAllTasks = DeleteAllTasks(toDoRepository),
             getAllTasks = GetAllTasks(toDoRepository),
             getSelectedTask = GetSelectedTask(toDoRepository),

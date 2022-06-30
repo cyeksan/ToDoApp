@@ -6,6 +6,9 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.csappgenerator.todoapp.R
 
@@ -13,9 +16,11 @@ import com.csappgenerator.todoapp.R
 fun ExistingTaskAppBar(
     selectedTaskTitle: String,
     navigateBackToListScreen: () -> Unit,
-    onDeleteClicked: () -> Unit,
+    onDeleteConfirmed: () -> Unit,
     onUpdateClicked: () -> Unit
 ) {
+    val openDialog = remember { mutableStateOf(false) }
+
     TopAppBar(
         navigationIcon = {
             CloseAction(onCloseClicked = navigateBackToListScreen)
@@ -26,7 +31,8 @@ fun ExistingTaskAppBar(
         backgroundColor = MaterialTheme.colors.primary,
         actions = {
             DeleteAction(
-                onDeleteClicked = onDeleteClicked
+                onDeleteConfirmed = onDeleteConfirmed, openDialog = openDialog,
+                selectedTaskTitle = selectedTaskTitle
             )
             UpdateAction(
                 onUpdateClicked = onUpdateClicked
@@ -50,9 +56,21 @@ fun CloseAction(
 
 @Composable
 fun DeleteAction(
-    onDeleteClicked: () -> Unit
+    onDeleteConfirmed: () -> Unit,
+    openDialog: MutableState<Boolean>,
+    selectedTaskTitle: String
 ) {
-    IconButton(onClick = onDeleteClicked) {
+    DisplayAlertDialog(
+        title = stringResource(id = R.string.delete_confirm_title, selectedTaskTitle),
+        message = stringResource(id = R.string.delete_confirm_message, selectedTaskTitle),
+        openDialog = openDialog,
+        closeDialog = { openDialog.value = false },
+        onYesClicked = onDeleteConfirmed
+    )
+
+    IconButton(onClick = {
+        openDialog.value = true
+    }) {
         Icon(
             imageVector = Icons.Filled.Delete,
             contentDescription = stringResource(R.string.delete_icon)

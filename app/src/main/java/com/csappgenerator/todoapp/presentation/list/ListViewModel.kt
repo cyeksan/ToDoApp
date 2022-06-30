@@ -4,16 +4,20 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.csappgenerator.todoapp.data.repository.DataStoreRepository
 import com.csappgenerator.todoapp.domain.model.ToDoTask
 import com.csappgenerator.todoapp.domain.use_case.wrapper.ListUseCases
 import com.csappgenerator.todoapp.presentation.common.SharedViewModel
 import com.csappgenerator.todoapp.presentation.common.SnackBarState
 import com.csappgenerator.todoapp.presentation.list.event.ListEvent
 import com.csappgenerator.todoapp.presentation.list.event.SearchBarEvent
-import com.csappgenerator.todoapp.presentation.list.state.ListState
+import com.csappgenerator.todoapp.presentation.list.state.RequestState
 import com.csappgenerator.todoapp.presentation.list.state.SearchBarState
 import com.csappgenerator.todoapp.presentation.task.event.TaskEvent
+import com.csappgenerator.todoapp.util.OrderType
+import com.csappgenerator.todoapp.util.Priority
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +25,8 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(
     private val useCases: ListUseCases,
     snackBarState: MutableState<SnackBarState>,
-    searchBarState: MutableState<SearchBarState>
+    searchBarState: MutableState<SearchBarState>,
+    private val dataStoreRepository: DataStoreRepository
 ) : SharedViewModel(
     prepareSnackBar = snackBarState,
     prepareSearchBar = searchBarState
@@ -31,36 +36,47 @@ class ListViewModel @Inject constructor(
         mutableStateOf<SearchBarState>(SearchBarState.SearchBarClosed)
     val searchBarState: State<SearchBarState> = _searchBarState
 
-    private val _listState =
-        mutableStateOf<ListState?>(null)
-    val listState: State<ListState?> = _listState
+    private val _requestState =
+        mutableStateOf<RequestState?>(null)
+    val requestState: State<RequestState?> = _requestState
+
+    private val _sortState =
+        mutableStateOf<OrderType>(OrderType.None)
+    private val sortState: State<OrderType> = _sortState
 
     private val _taskEventState =
         mutableStateOf<TaskEvent?>(null)
     val taskEventState: State<TaskEvent?> = _taskEventState
 
-    private val _allTasks = mutableStateOf<List<ToDoTask>?>(null)
-    private val allTasks: State<List<ToDoTask>?> = _allTasks
+    private val _allTasks = mutableStateOf<List<ToDoTask>>(emptyList())
+    val allTasks: State<List<ToDoTask>> = _allTasks
 
     init {
-        getAllTasks()
+        viewModelScope.launch {
+            dataStoreRepository.readSortState.map { priorityName: String ->
+                Priority.valueOf(priorityName)
+            }.collect { priority ->
+                _sortState.value = priority.toOrderType()
+                getAllTasks(sortState.value, _allTasks)
+
+            }
+
+        }
     }
 
-    private fun getAllTasks() {
-        _listState.value = ListState.Loading
+
+    private fun getAllTasks(orderType: OrderType, allTasks: MutableState<List<ToDoTask>>) {
+        _requestState.value = RequestState.Loading
         try {
             viewModelScope.launch {
-                useCases.getAllTasks().collect { toDoTaskList ->
-                    _allTasks.value = toDoTaskList
-                    _listState.value = ListState.Success(toDoTaskList)
-                    if (toDoTaskList.isEmpty()) {
-                        _listState.value = ListState.EmptyList
-                    }
+                useCases.getAllTasks(orderType).collect { toDoTaskList ->
+                    allTasks.value = toDoTaskList
+                    _requestState.value = RequestState.Success(toDoTaskList)
                 }
 
             }
         } catch (ex: Exception) {
-            _listState.value = ListState.Error(ex)
+            _requestState.value = RequestState.Error(ex)
         }
 
     }
@@ -74,25 +90,22 @@ class ListViewModel @Inject constructor(
             is SearchBarEvent.CloseSearchBar -> {
                 _searchBarState.value.searchBarText.value = ""
                 _searchBarState.value = SearchBarState.SearchBarClosed
-                _listState.value = ListState.Success(allTasks.value!!)
+                _requestState.value = RequestState.Success(allTasks.value)
             }
 
             is SearchBarEvent.SearchBarOnValueChanged -> {
                 _searchBarState.value.searchBarText.value = event.value
                 viewModelScope.launch {
-                    _listState.value = ListState.Loading
+                    _requestState.value = RequestState.Loading
                     try {
                         viewModelScope.launch {
                             useCases.searchDatabase("%${event.value}%").collect { toDoTaskList ->
-                                _listState.value = ListState.Success(toDoTaskList)
-                                if (toDoTaskList.isEmpty()) {
-                                    _listState.value = ListState.EmptyList
-                                }
+                                _requestState.value = RequestState.Success(toDoTaskList)
                             }
 
                         }
                     } catch (ex: Exception) {
-                        _listState.value = ListState.Error(ex)
+                        _requestState.value = RequestState.Error(ex)
                     }
                 }
             }
@@ -126,11 +139,24 @@ class ListViewModel @Inject constructor(
                 try {
                     viewModelScope.launch {
                         useCases.deleteAllTasks()
+                        prepareSnackBar.setSnackBarStateToShow(TaskEvent.DeleteAll, null)
                     }
-                    prepareSnackBar.setSnackBarStateToShow(TaskEvent.DeleteAll, null)
 
                 } catch (ex: Exception) {
-                    _listState.value = ListState.Error(ex)
+                    _requestState.value = RequestState.Error(ex)
+                }
+            }
+            is ListEvent.PersistSortingStateAndReload -> {
+                viewModelScope.launch {
+                    dataStoreRepository.persistSortState(event.priority)
+                    _sortState.value = event.priority.toOrderType()
+                    getAllTasks(sortState.value, _allTasks)
+                }
+            }
+            is ListEvent.Delete -> {
+                viewModelScope.launch {
+                    useCases.deleteTask(event.task)
+                    prepareSnackBar.setSnackBarStateToShow(TaskEvent.Delete, event.task)
                 }
             }
         }

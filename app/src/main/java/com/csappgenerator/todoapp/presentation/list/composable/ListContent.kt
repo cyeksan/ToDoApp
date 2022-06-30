@@ -1,14 +1,16 @@
 package com.csappgenerator.todoapp.presentation.list.composable
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,25 +18,83 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.csappgenerator.todoapp.util.Priority
 import com.csappgenerator.todoapp.domain.model.ToDoTask
-import com.csappgenerator.todoapp.ui.theme.LARGE_PADDING
+import com.csappgenerator.todoapp.ui.theme.MEDIUM_PADDING
 import com.csappgenerator.todoapp.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.csappgenerator.todoapp.ui.theme.TASK_ITEM_ELEVATION
+import com.csappgenerator.todoapp.util.Constants
+import com.csappgenerator.todoapp.util.Constants.DELETE_ICON_MAX_ROTATION
+import com.csappgenerator.todoapp.util.Constants.LIST_SHRINK_TWEEN_DELAY
+import com.csappgenerator.todoapp.util.Constants.LIST_SHRINK_TWEEN_DURATION
+import com.csappgenerator.todoapp.util.Priority
+import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ListContent(taskList: List<ToDoTask>, navigateToTaskScreen: (Int) -> Unit) {
-    LazyColumn {
-        items(
-            items = taskList,
-            key = { task ->
-                task.id
-            }) { task ->
-            TaskItem(
-                toDoTask = task,
-                navigateToTaskScreen = navigateToTaskScreen
-            )
+fun ListContent(
+    taskList: List<ToDoTask>,
+    onSwipeToDelete: (ToDoTask) -> Unit,
+    navigateToTaskScreen: (Int) -> Unit) {
+    if (taskList.isNotEmpty()) {
+        LazyColumn {
+            items(
+                items = taskList,
+                key = { task ->
+                    task.id
+                }) { task ->
+                val dismissState = rememberDismissState()
+                val dismissDirection = dismissState.dismissDirection
+
+                val isDismissed =
+                    dismissState.isDismissed(DismissDirection.EndToStart)
+
+                if (isDismissed && dismissDirection == DismissDirection.EndToStart) {
+                    LaunchedEffect(key1 = true) {
+                        delay(LIST_SHRINK_TWEEN_DELAY) // Since the list animation lasts for 300 ms, we add the delay to see the animation.
+                        onSwipeToDelete(task)
+                    }
+                }
+                val degrees by animateFloatAsState(
+                    targetValue =
+                    if (dismissState.targetValue == DismissValue.Default) 0f else DELETE_ICON_MAX_ROTATION
+                )
+
+                var itemAppeared by remember {mutableStateOf(false)}
+
+                LaunchedEffect(key1 = true) {
+                    itemAppeared = true
+                }
+
+                AnimatedVisibility(
+                    visible = itemAppeared && !isDismissed,
+                    enter = expandVertically(
+                        animationSpec = tween(LIST_SHRINK_TWEEN_DURATION)
+                    ),
+                    exit = shrinkVertically(
+                        animationSpec = tween(LIST_SHRINK_TWEEN_DURATION)
+                    )
+                ) {
+                    SwipeToDismiss(
+                        state = dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        dismissThresholds = { FractionalThreshold(fraction = Constants.SWIPE_DISMISS_THRESHOLD) },
+                        background = {
+                            SwipeRedBackground(
+                                degrees = degrees,
+                            )
+                        },
+                        dismissContent = {
+                            TaskItem(
+                                toDoTask = task,
+                                navigateToTaskScreen = navigateToTaskScreen
+                            )
+                        }
+                    )
+                }
+            }
         }
+    } else {
+        EmptyContent()
     }
 }
 
@@ -57,7 +117,7 @@ fun TaskItem(
     ) {
         Column(
             modifier = Modifier
-                .padding(all = LARGE_PADDING)
+                .padding(all = MEDIUM_PADDING)
                 .fillMaxWidth()
         ) {
             Row {
@@ -83,7 +143,7 @@ fun TaskItem(
             }
 
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(0.9f),
                 text = toDoTask.description,
                 style = MaterialTheme.typography.subtitle1,
                 maxLines = 2,
@@ -93,13 +153,13 @@ fun TaskItem(
 
         }
     }
-   /* Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = LARGE_PADDING)
-            .height(SPACER_HEIGHT)
-            .background(color = MaterialTheme.colors.surface)
-    )*/
+    /* Spacer(
+         modifier = Modifier
+             .fillMaxWidth()
+             .padding(horizontal = LARGE_PADDING)
+             .height(SPACER_HEIGHT)
+             .background(color = MaterialTheme.colors.surface)
+     )*/
 }
 
 @Composable

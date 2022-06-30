@@ -26,14 +26,12 @@ fun TaskScreen(
 ) {
     val taskState = viewModel.taskState.value
     val taskPropertyState = viewModel.taskPropertyState.value
-
     var taskTitle by taskPropertyState.title
     var taskDescription by taskPropertyState.description
     var taskPriority by taskPropertyState.priority
-
     val scaffoldState = rememberScaffoldState()
-
     val context = LocalContext.current
+
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -42,12 +40,9 @@ fun TaskScreen(
                         message = event.message,
                         actionLabel = context.getString(R.string.snack_bar_ok_action_label),
                     )
-
                 }
                 else -> {
                     navController.navigateUp()
-
-
                 }
             }
         }
@@ -78,7 +73,7 @@ fun TaskScreen(
                         navigateBackToListScreen = {
                             viewModel.onEvent(TaskEvent.NoAction(navController))
                         },
-                        onDeleteClicked = {
+                        onDeleteConfirmed = {
                             viewModel.onEvent(TaskEvent.Delete)
                         },
                         onUpdateClicked = {
@@ -108,7 +103,5 @@ fun TaskScreen(
                 )
             }
         },
-
-        )
-
+    )
 }

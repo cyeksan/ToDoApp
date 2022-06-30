@@ -8,9 +8,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.csappgenerator.todoapp.R
 import com.csappgenerator.todoapp.util.Priority
-import com.csappgenerator.todoapp.ui.theme.LARGE_PADDING
 import com.csappgenerator.todoapp.ui.theme.MEDIUM_PADDING
-import com.csappgenerator.todoapp.util.Constants.MAX_TITLE_LENGTH
+import com.csappgenerator.todoapp.ui.theme.SMALL_PADDING
+import com.csappgenerator.todoapp.util.Constants.MAX_TASK_TITLE_LENGTH
 
 @Composable
 fun TaskContent(
@@ -23,13 +23,13 @@ fun TaskContent(
 ) {
     Column(
         modifier = Modifier
-            .padding(all = LARGE_PADDING)
+            .padding(all = MEDIUM_PADDING)
             .fillMaxSize()
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = title,
-            onValueChange = { if (it.length <= MAX_TITLE_LENGTH) onTitleChange(it) },
+            onValueChange = { if (it.length <= MAX_TASK_TITLE_LENGTH) onTitleChange(it) },
             label = {
                 Text(text = stringResource(R.string.title_label))
             },
@@ -45,7 +45,7 @@ fun TaskContent(
 
         Divider(
             modifier = Modifier
-                .height(MEDIUM_PADDING),
+                .height(SMALL_PADDING),
             color = MaterialTheme.colors.background
         )
 

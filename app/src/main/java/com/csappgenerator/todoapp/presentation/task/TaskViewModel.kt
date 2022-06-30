@@ -15,6 +15,7 @@ import com.csappgenerator.todoapp.presentation.task.event.TaskEvent
 import com.csappgenerator.todoapp.presentation.task.event.UiEvent
 import com.csappgenerator.todoapp.presentation.task.state.TaskPropertyState
 import com.csappgenerator.todoapp.presentation.task.state.TaskState
+import com.csappgenerator.todoapp.util.Constants.DEFAULT_ERROR
 import com.csappgenerator.todoapp.util.Constants.TASK_ARGUMENT
 import com.csappgenerator.todoapp.util.Constants.TASK_ID_DEFAULT
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +26,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-
     private val useCases: TaskUseCases,
     savedStateHandle: SavedStateHandle,
     snackBarState: MutableState<SnackBarState>,
@@ -73,7 +73,7 @@ class TaskViewModel @Inject constructor(
                     } catch (ex: InvalidToDoTaskException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(
-                                ex.localizedMessage ?: "Couldn't save the task"
+                                ex.localizedMessage ?: DEFAULT_ERROR
                             )
                         )
                     }
@@ -94,7 +94,7 @@ class TaskViewModel @Inject constructor(
                     } catch (ex: InvalidToDoTaskException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(
-                                ex.localizedMessage ?: "Couldn't save the task"
+                                ex.localizedMessage ?: DEFAULT_ERROR
                             )
                         )
                     }

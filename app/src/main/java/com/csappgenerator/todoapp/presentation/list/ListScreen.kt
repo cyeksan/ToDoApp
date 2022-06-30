@@ -1,12 +1,8 @@
 package com.csappgenerator.todoapp.presentation.list
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -15,7 +11,7 @@ import com.csappgenerator.todoapp.presentation.common.SnackBarState
 import com.csappgenerator.todoapp.presentation.list.composable.*
 import com.csappgenerator.todoapp.presentation.list.event.ListEvent
 import com.csappgenerator.todoapp.presentation.list.event.SearchBarEvent
-import com.csappgenerator.todoapp.presentation.list.state.ListState
+import com.csappgenerator.todoapp.presentation.list.state.RequestState
 import com.csappgenerator.todoapp.presentation.list.state.SearchBarState
 import com.csappgenerator.todoapp.presentation.task.event.TaskEvent
 import com.csappgenerator.todoapp.util.navigateToNewTask
@@ -29,24 +25,20 @@ fun ListScreen(
     viewModel: ListViewModel = hiltViewModel(),
 
     ) {
-    val listState = viewModel.listState.value
-
+    val requestState = viewModel.requestState.value
     val searchState by viewModel.searchBarState
     val searchBarTextState by viewModel.searchBarState.value.searchBarText
     val prepareSnackBarState = viewModel.prepareSnackBar.value
-    val updateOrDeleteState by viewModel.taskEventState
+    val taskEventState by viewModel.taskEventState
+
+    val taskList by viewModel.allTasks
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
     val context = LocalContext.current
 
-    when (viewModel.prepareSearchBar.value) {
-        is SearchBarState.SearchBarClosed -> {
-            viewModel.onSearchBarEvent(SearchBarEvent.CloseSearchBar)
-        }
-        else -> {}
-    }
+    val openConfirmDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = prepareSnackBarState) {
         when (prepareSnackBarState) {
@@ -60,21 +52,23 @@ fun ListScreen(
                 scope.launch {
                     val result = scaffoldState.snackbarHostState.showSnackbar(
                         message =
-                        when (updateOrDeleteState) {
-                            is TaskEvent.Update -> context.getString(R.string.note_updated) + " ${prepareSnackBarState.task!!.title}"
-                            is TaskEvent.Delete -> context.getString(R.string.note_deleted) + " ${prepareSnackBarState.task!!.title}"
-                            is TaskEvent.DeleteAll -> context.getString(R.string.all_notes_deleted)
+                        when (taskEventState) {
+                            is TaskEvent.Update -> context.getString(R.string.task_updated) + " ${prepareSnackBarState.task!!.title}"
+                            is TaskEvent.Delete -> context.getString(R.string.task_deleted) + " ${prepareSnackBarState.task!!.title}"
+                            is TaskEvent.DeleteAll -> context.getString(R.string.all_tasks_deleted)
                             else -> ""
                         },
                         actionLabel =
-                        when (updateOrDeleteState) {
+                        when (taskEventState) {
                             is TaskEvent.Update -> context.getString(R.string.snack_bar_ok_action_label)
                             is TaskEvent.Delete -> context.getString(R.string.snack_bar_undo_action_label)
+                            is TaskEvent.DeleteAll -> context.getString(R.string.snack_bar_ok_action_label)
                             else -> ""
                         },
                     )
                     if (result == SnackbarResult.ActionPerformed)
-                        viewModel.onEvent(ListEvent.RestoreTask(prepareSnackBarState.task!!))
+                        prepareSnackBarState.task?.let { ListEvent.RestoreTask(it) }
+                            ?.let { viewModel.onEvent(it) }
                 }
             }
             is SnackBarState.Idle -> {}
@@ -83,16 +77,17 @@ fun ListScreen(
 
     Scaffold(
         content = {
-            when (listState) {
-                is ListState.Loading -> {
+            when (requestState) {
+                is RequestState.Loading -> {
                     CircularProgressBar()
                 }
-                is ListState.EmptyList -> {
-                    EmptyContent()
-                }
-                is ListState.Success -> {
+
+                is RequestState.Success -> {
                     ListContent(
-                        taskList = listState.data,
+                        taskList = requestState.data,
+                        onSwipeToDelete = { task ->
+                            viewModel.onEvent(ListEvent.Delete(task))
+                        },
                         navigateToTaskScreen = { taskId ->
                             navController.navigateToSpecificTask(taskId)
                         })
@@ -110,11 +105,26 @@ fun ListScreen(
                             viewModel.onSearchBarEvent(SearchBarEvent.OpenSearchBar)
                         },
                         onSortClicked = { priority ->
-
+                            viewModel.onEvent(ListEvent.PersistSortingStateAndReload(priority))
                         },
                         onDeleteAllClicked = {
+                            if (taskList.isEmpty()) {
+                                openConfirmDialog.value = false
+                                scope.launch {
+                                    scaffoldState.snackbarHostState.showSnackbar(
+                                        message = context.getString(R.string.no_tasks_found),
+                                        actionLabel = context.getString(R.string.snack_bar_ok_action_label)
+                                    )
+                                }
+                            } else {
+                                openConfirmDialog.value = true
+                            }
+
+                        },
+                        onDeleteAllConfirmed = {
                             viewModel.onEvent(ListEvent.DeleteAll)
-                        }
+                        },
+                        openDialog = openConfirmDialog
                     )
                 }
                 else -> {
@@ -150,4 +160,11 @@ fun ListScreen(
             }
         },
     )
+
+    when (viewModel.prepareSearchBar.value) {
+        is SearchBarState.SearchBarClosed -> {
+            viewModel.onSearchBarEvent(SearchBarEvent.CloseSearchBar)
+        }
+        else -> {}
+    }
 }
