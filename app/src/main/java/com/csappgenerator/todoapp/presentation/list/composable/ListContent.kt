@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +25,7 @@ import com.csappgenerator.todoapp.util.Constants
 import com.csappgenerator.todoapp.util.Constants.DELETE_ICON_MAX_ROTATION
 import com.csappgenerator.todoapp.util.Constants.LIST_SHRINK_TWEEN_DURATION
 import com.csappgenerator.todoapp.util.clickableSingle
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
