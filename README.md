@@ -11,7 +11,7 @@
 * Swipe to Delete
 * Animation
 
-https://user-images.githubusercontent.com/34041050/177018012-c0be6541-f76a-4e32-9a2e-75c6229fe594.mp4
+https://user-images.githubusercontent.com/34041050/177018244-8c4fe76c-001e-41d4-b790-0e4cb0bee6f8.mp4
 
 <h3>Light Theme</h3>
 
