@@ -56,7 +56,7 @@ fun ListContent(
                     if (dismissState.targetValue == DismissValue.Default) 0f else DELETE_ICON_MAX_ROTATION
                 )
 
-                var itemDisappeared by remember { mutableStateOf(false)}
+                var itemDisappeared by remember { mutableStateOf(false) }
                 LaunchedEffect(key1 = true) {
                     itemDisappeared = true
                 }

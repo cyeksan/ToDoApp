@@ -4,8 +4,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.csappgenerator.todoapp.data.repository.DataStoreRepository
 import com.csappgenerator.todoapp.domain.model.ToDoTask
+import com.csappgenerator.todoapp.domain.repository.DataStoreRepository
 import com.csappgenerator.todoapp.domain.use_case.wrapper.ListUseCases
 import com.csappgenerator.todoapp.presentation.common.SharedViewModel
 import com.csappgenerator.todoapp.presentation.common.SnackBarState
@@ -52,7 +52,7 @@ class ListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _requestState.value = RequestState.Loading
-            dataStoreRepository.readSortState.map { priorityName: String ->
+            dataStoreRepository.readSortState().map { priorityName: String ->
                 Priority.valueOf(priorityName)
             }.collect { priority ->
                 _sortState.value = priority.toOrderType()
@@ -117,7 +117,7 @@ class ListViewModel @Inject constructor(
             }
             is ListEvent.PersistSortingStateAndReload -> {
                 viewModelScope.launch {
-                    dataStoreRepository.persistSortState(event.priority)
+                    dataStoreRepository.saveSortState(event.priority)
                     _sortState.value = event.priority.toOrderType()
                 }
             }
