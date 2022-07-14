@@ -22,7 +22,8 @@ fun DefaultListAppBar(
     onSortClicked: (Priority) -> Unit,
     onDeleteAllClicked: () -> Unit,
     onDeleteAllConfirmed: () -> Unit,
-    openDeleteAllConfirmDialog: MutableState<Boolean>
+    closeDeleteAllDialog: () -> Unit,
+    openDeleteAllConfirmDialog: Boolean
 ) {
     TopAppBar(
         title = {
@@ -35,7 +36,8 @@ fun DefaultListAppBar(
                 onSortClicked = onSortClicked,
                 onDeleteAllConfirmed = onDeleteAllConfirmed,
                 onDeleteAllClicked = onDeleteAllClicked,
-                openDeleteAllConfirmDialog = openDeleteAllConfirmDialog
+                openDeleteAllConfirmDialog = openDeleteAllConfirmDialog,
+                closeDialog = closeDeleteAllDialog
             )
         }
     )
@@ -47,14 +49,16 @@ fun ListAppBarActions(
     onSortClicked: (Priority) -> Unit,
     onDeleteAllClicked: () -> Unit,
     onDeleteAllConfirmed: () -> Unit,
-    openDeleteAllConfirmDialog: MutableState<Boolean>
+    closeDialog: () -> Unit,
+    openDeleteAllConfirmDialog: Boolean,
 ) {
     SearchAction(onSearchClicked = onSearchClicked)
     SortAction(onSortClicked = onSortClicked)
     DeleteAllAction(
         onDeleteAllClicked = onDeleteAllClicked,
         onDeleteAllConfirmed = onDeleteAllConfirmed,
-        openDeleteAllConfirmDialog = openDeleteAllConfirmDialog
+        openDeleteAllConfirmDialog = openDeleteAllConfirmDialog,
+        closeDialog = closeDialog
     )
 }
 
@@ -109,15 +113,16 @@ fun SortAction(
 fun DeleteAllAction(
     onDeleteAllClicked: () -> Unit,
     onDeleteAllConfirmed: () -> Unit,
-    openDeleteAllConfirmDialog: MutableState<Boolean>,
+    openDeleteAllConfirmDialog: Boolean,
+    closeDialog: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     DisplayAlertDialog(
         title = stringResource(id = R.string.delete_all_confirm_title),
         message = stringResource(id = R.string.delete_all_confirm_message),
-        openDeleteItemConfirmDialog = openDeleteAllConfirmDialog.value,
-        closeDialog = { openDeleteAllConfirmDialog.value = false },
+        openDeleteItemConfirmDialog = openDeleteAllConfirmDialog,
+        closeDeleteItemDialog = closeDialog,
         onYesClicked = onDeleteAllConfirmed
     )
     IconButton(onClick = {

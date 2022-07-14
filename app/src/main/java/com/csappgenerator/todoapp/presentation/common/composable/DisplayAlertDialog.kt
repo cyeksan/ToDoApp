@@ -3,7 +3,6 @@ package com.csappgenerator.todoapp.presentation.common.composable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -14,7 +13,7 @@ fun DisplayAlertDialog(
     title: String,
     message: String,
     openDeleteItemConfirmDialog: Boolean,
-    closeDialog: () -> Unit,
+    closeDeleteItemDialog: () -> Unit,
     onYesClicked: () -> Unit
 ) {
     if (openDeleteItemConfirmDialog) {
@@ -37,7 +36,7 @@ fun DisplayAlertDialog(
                 OutlinedButton(
                     onClick = {
                         onYesClicked()
-                        closeDialog()
+                        closeDeleteItemDialog()
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     colors = ButtonDefaults.buttonColors(
@@ -52,7 +51,7 @@ fun DisplayAlertDialog(
             dismissButton = {
                 Button(
                     onClick = {
-                        closeDialog()
+                        closeDeleteItemDialog()
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
 

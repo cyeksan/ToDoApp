@@ -119,7 +119,8 @@ fun ListScreen(
                         onDeleteAllConfirmed = {
                             viewModel.onEvent(ListEvent.DeleteAll)
                         },
-                        openDeleteAllConfirmDialog = openDeleteAllConfirmDialog
+                        openDeleteAllConfirmDialog = openDeleteAllConfirmDialog.value,
+                        closeDeleteAllDialog = { openDeleteAllConfirmDialog.value = false }
                     )
                 }
                 else -> {
