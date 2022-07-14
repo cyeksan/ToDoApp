@@ -64,7 +64,7 @@ fun DeleteAction(
     DisplayAlertDialog(
         title = stringResource(id = R.string.delete_confirm_title, selectedTaskTitle),
         message = stringResource(id = R.string.delete_confirm_message, selectedTaskTitle),
-        openDeleteItemConfirmDialog = openDeleteItemConfirmDialog,
+        openDeleteItemConfirmDialog = openDeleteItemConfirmDialog.value,
         closeDialog = { openDeleteItemConfirmDialog.value = false },
         onYesClicked = onDeleteConfirmed
     )

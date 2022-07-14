@@ -116,7 +116,7 @@ fun DeleteAllAction(
     DisplayAlertDialog(
         title = stringResource(id = R.string.delete_all_confirm_title),
         message = stringResource(id = R.string.delete_all_confirm_message),
-        openDeleteItemConfirmDialog = openDeleteAllConfirmDialog,
+        openDeleteItemConfirmDialog = openDeleteAllConfirmDialog.value,
         closeDialog = { openDeleteAllConfirmDialog.value = false },
         onYesClicked = onDeleteAllConfirmed
     )

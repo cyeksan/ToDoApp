@@ -13,11 +13,11 @@ import com.csappgenerator.todoapp.R
 fun DisplayAlertDialog(
     title: String,
     message: String,
-    openDeleteItemConfirmDialog: MutableState<Boolean>,
+    openDeleteItemConfirmDialog: Boolean,
     closeDialog: () -> Unit,
     onYesClicked: () -> Unit
 ) {
-    if (openDeleteItemConfirmDialog.value) {
+    if (openDeleteItemConfirmDialog) {
         AlertDialog(
             title = {
                 Text(
