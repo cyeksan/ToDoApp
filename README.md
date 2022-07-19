@@ -1,6 +1,6 @@
 # ToDoApp
 
-<h3>ToDo Android app with Jetpack Compose, MVI Architectural Pattern and Clean Architecture</h3>
+<h3>ToDo Android app with Jetpack Compose, MVI/MVVM Architectural Pattern and Clean Architecture</h3>
 
 * Jetpack Compose
 * Clean Architecture
