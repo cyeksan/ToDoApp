@@ -8,5 +8,8 @@ sealed class TaskEvent {
     object Delete : TaskEvent()
     object DeleteAll : TaskEvent()
     object Restore : TaskEvent()
+    data class ShowErrorSnackBar(val message: String) : TaskEvent()
+    object SaveTask : TaskEvent()
+    object ExitTask : TaskEvent()
     data class NoAction(val navController: NavController) : TaskEvent()
 }

@@ -12,7 +12,6 @@ import com.csappgenerator.todoapp.presentation.common.SharedViewModel
 import com.csappgenerator.todoapp.presentation.common.SnackBarState
 import com.csappgenerator.todoapp.presentation.list.state.SearchBarState
 import com.csappgenerator.todoapp.presentation.task.event.TaskEvent
-import com.csappgenerator.todoapp.presentation.task.event.UiEvent
 import com.csappgenerator.todoapp.presentation.task.state.TaskPropertyState
 import com.csappgenerator.todoapp.presentation.task.state.TaskState
 import com.csappgenerator.todoapp.util.Constants.DEFAULT_ERROR
@@ -45,7 +44,7 @@ class TaskViewModel @Inject constructor(
 
     private var currentTaskId: Int? = null
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    private val _eventFlow = MutableSharedFlow<TaskEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
@@ -56,7 +55,7 @@ class TaskViewModel @Inject constructor(
         when (event) {
             is TaskEvent.NoAction -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(UiEvent.ExitTask)
+                    _eventFlow.emit(TaskEvent.ExitTask)
                 }
             }
             is TaskEvent.Add -> {
@@ -68,10 +67,10 @@ class TaskViewModel @Inject constructor(
                             priority = taskPropertyState.value.priority.value,
                         )
                         useCases.addTask(task)
-                        _eventFlow.emit(UiEvent.SaveTask)
+                        _eventFlow.emit(TaskEvent.SaveTask)
                     } catch (ex: InvalidToDoTaskException) {
                         _eventFlow.emit(
-                            UiEvent.ShowErrorSnackBar(
+                            TaskEvent.ShowErrorSnackBar(
                                 ex.localizedMessage ?: DEFAULT_ERROR
                             )
                         )
@@ -89,10 +88,10 @@ class TaskViewModel @Inject constructor(
                         )
                         useCases.updateTask(task)
                         snackBarState.show(TaskEvent.Update, task)
-                        _eventFlow.emit(UiEvent.SaveTask)
+                        _eventFlow.emit(TaskEvent.SaveTask)
                     } catch (ex: InvalidToDoTaskException) {
                         _eventFlow.emit(
-                            UiEvent.ShowErrorSnackBar(
+                            TaskEvent.ShowErrorSnackBar(
                                 ex.localizedMessage ?: DEFAULT_ERROR
                             )
                         )
@@ -110,7 +109,7 @@ class TaskViewModel @Inject constructor(
                     )
                     useCases.deleteTask(task)
                     snackBarState.show(TaskEvent.Delete, task)
-                    _eventFlow.emit(UiEvent.SaveTask)
+                    _eventFlow.emit(TaskEvent.SaveTask)
                 }
             }
 

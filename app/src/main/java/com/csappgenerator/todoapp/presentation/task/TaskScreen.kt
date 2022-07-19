@@ -14,7 +14,6 @@ import com.csappgenerator.todoapp.presentation.task.composable.ExistingTaskAppBa
 import com.csappgenerator.todoapp.presentation.task.composable.NewTaskAppBar
 import com.csappgenerator.todoapp.presentation.task.composable.TaskContent
 import com.csappgenerator.todoapp.presentation.task.event.TaskEvent
-import com.csappgenerator.todoapp.presentation.task.event.UiEvent
 import com.csappgenerator.todoapp.presentation.task.state.TaskState
 import kotlinx.coroutines.flow.collectLatest
 
@@ -35,7 +34,7 @@ fun TaskScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is UiEvent.ShowErrorSnackBar -> {
+                is TaskEvent.ShowErrorSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = context.getString(R.string.snack_bar_ok_action_label),
